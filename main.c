@@ -1,25 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-int main(void) {
-
-    char nombreArchivo1[50];
-    Lista L;
-
-    printf("Nombre primer archivo: ");
-    scanf("%s", &nombreArchivo1);
-    L = leeArchivo(nombreArchivo1);
-    printf("\nPromedio de Temperaturas: ");
-
-    printf("\n\n");
-    system("pause");
-    printf("\n");
-    return 0;
-}
+#include <stdbool.h>
 
 struct nodo {
     int info;
-    struct nodo *sig;
+    struct nodo *sig; // Puntero al siguiente nodo
 };
 
 typedef struct nodo tNodo;
@@ -38,8 +23,22 @@ Lista creaNodo(int dato) {
     return p;
 }
 
+Lista insertaFinal(Lista L, int dato) {
+    Lista nuevo = creaNodo(dato);
+    if (L == NULL) {
+        return nuevo;
+    }
+
+    Lista aux = L;
+    while (aux->sig != NULL) {
+        aux = aux->sig;
+    }
+    aux->sig = nuevo;
+    return L;
+}
+
 Lista leeArchivo(char nombreArchivo[50]) {
-    File *archivo;
+    FILE *archivo;
     Lista L;
     int dato;
 
@@ -57,3 +56,50 @@ Lista leeArchivo(char nombreArchivo[50]) {
     fclose(archivo);
     return L;
 }
+
+
+
+int promedio(Lista L){
+    Lista aux = L;
+    int suma ,contador;
+    suma = 0;
+    contador = 0;
+    while(aux != NULL) {
+        suma += aux->info;
+        contador++;
+        aux = aux->sig;
+    }
+    int valorPromedio = suma / contador;
+    return valorPromedio;
+}
+
+void imprimeLista(Lista L) {
+    Lista aux = L;
+    while (aux != NULL) {
+        printf("%d ", aux->info);
+        aux = aux->sig;
+    }
+    printf("\n");
+}
+
+int main() {
+
+    char nombreArchivo1[50];
+    Lista L;
+    int promedioTemperaturas;
+
+    printf("Nombre primer archivo: ");
+    scanf("%s", &nombreArchivo1);
+    L = leeArchivo(nombreArchivo1);
+    printf("datos del archivo: \n");
+    imprimeLista(L);
+
+    promedioTemperaturas = promedio(L);
+    printf("\nPromedio de Temperaturas: \n");
+    printf("%d grados\n", promedioTemperaturas);
+    printf("\n\n");
+    system("pause");
+    printf("\n");
+    return 0;
+}
+
